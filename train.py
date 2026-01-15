@@ -10,6 +10,7 @@ EPOCHS = 8
 LR = 1e-3
 VAL_SPLIT = 0.2
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+NUM_CLASSES = 5
 
 # --- Transforms ---
 train_transform = transforms.Compose([
@@ -40,15 +41,17 @@ train_loader = DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True)
 val_loader = DataLoader(val_ds, batch_size=BATCH_SIZE, shuffle=False)
 
 # --- Model ---
-model = models.mobilenet_v2(weights="IMAGENET1K_V1")
-for p in model.features.parameters():
+model = models.resnet50(weights="IMAGENET1K_V1")
+for p in model.layer1.parameters():
+    p.requires_grad = False
+for p in model.layer2.parameters():
     p.requires_grad = False
 
-model.classifier[1] = nn.Linear(1280, 4)
+model.fc = nn.Linear(2048, NUM_CLASSES)
 model.to(DEVICE)
 
 criterion = nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam(model.classifier.parameters(), lr=LR)
+optimizer = torch.optim.Adam(model.fc.parameters(), lr=LR)
 
 # --- Training loop ---
 for epoch in range(EPOCHS):
