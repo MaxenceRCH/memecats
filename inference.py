@@ -65,6 +65,8 @@ while True:
     print("")
     with torch.no_grad():
         logits = model(inp)
+        probs = torch.softmax(logits, dim=1)[0]  # Get probabilities for each class
+        print(f"All class probabilities: {probs}")  # See if class 4 is always low
         confidence = torch.softmax(logits, dim=1).max().item()
         pred = logits.argmax(dim=1).item()
         print(f"Predicted class: {pred} with confidence {confidence:.4f}")

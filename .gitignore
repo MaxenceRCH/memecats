@@ -1,3 +1,4 @@
 venv
 # Ignore all image files in data folder but keep folder structure
 data/**/*.jpg
+*.zip
