@@ -24,9 +24,8 @@ memecats/
 ## 🚀 Setup
 
 ### 1. Create and Activate Virtual Environment
-
+For Windows :
 ```powershell
-cd c:\AMOA\memecats
 python -m venv venv
 venv\Scripts\Activate.ps1
 ```
@@ -41,7 +40,6 @@ Dependencies include:
 - torch
 - torchvision
 - opencv-python
-- numpy
 - tqdm
 
 ## 🎮 Usage
@@ -73,7 +71,7 @@ python train.py
 Configuration options in `train.py`:
 - `BATCH_SIZE`: 32 (training batch size)
 - `EPOCHS`: 8 (number of training epochs)
-- `LR`: 1e-3 (learning rate)
+- `LR`: 1e-4 (learning rate)
 - `VAL_SPLIT`: 0.2 (validation split ratio)
 - `NUM_CLASSES`: 5 (number of cat classes)
 
@@ -90,9 +88,9 @@ python inference.py
 ```
 
 Configuration options in `inference.py`:
-- `CAM_ID`: Which camera to use (default: 1)
+- `CAM_ID`: Which camera to use (default: 0)
 - `NUM_CLASSES`: Number of cat classes (default: 5)
-- `CONFIDENCE_THRESHOLD`: Minimum confidence to display prediction (default: 0.6)
+- `CONFIDENCE_THRESHOLD`: Minimum confidence to display prediction (default: 0.75)
 - `CAT_NAMES`: Dictionary mapping class IDs to friendly names
 
 Controls:
@@ -101,7 +99,7 @@ Controls:
 ## ⚙️ Configuration
 
 ### Camera Selection
-Edit `CAM_ID` in `inference.py` to use a different camera (run `detect_cameras.py` to find the right ID)
+Edit `CAM_ID` in `inference.py` to use a different camera
 
 ### Confidence Threshold
 Adjust `CONFIDENCE_THRESHOLD` in `inference.py` to filter out low-confidence predictions (0.0 - 1.0)
