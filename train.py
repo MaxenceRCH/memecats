@@ -7,11 +7,11 @@ from tqdm import tqdm
 DATA_DIR = "data"
 BATCH_SIZE = 32
 EPOCHS = 20
-LR = 1e-4  # Lower LR for fine-tuning
+LR = 1e-4  
 VAL_SPLIT = 0.2
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 NUM_CLASSES = 5
-PATIENCE = 3  # Early stopping patience
+PATIENCE = 3  
 
 # --- Transforms ---
 train_transform = transforms.Compose([

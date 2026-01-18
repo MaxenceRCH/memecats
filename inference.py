@@ -8,7 +8,7 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 NUM_CLASSES = 5
 MODEL_PATH = "face_classifier.pt"
 CAT_DIR = "cats"
-CAM_ID = 1
+CAM_ID = 0
 # --------------------------------------------
 
 # --- Load model ---
@@ -19,7 +19,7 @@ model.load_state_dict(torch.load(MODEL_PATH, map_location=DEVICE))
 model.eval().to(DEVICE)
 
 # --- Confidence threshold ---
-CONFIDENCE_THRESHOLD = 0.4
+CONFIDENCE_THRESHOLD = 0.75
 
 # --- Cat name mapping ---
 CAT_NAMES = {
@@ -54,32 +54,46 @@ cap = cv2.VideoCapture(CAM_ID)
 if not cap.isOpened():
     raise RuntimeError("Cannot open webcam")
 
+print("Inference starting, press ESC to exit")
 while True:
     ret, frame = cap.read()
     if not ret:
         break
-    print("Processing frame...")    
+     
     # Resize frame for model input
     resized_frame = cv2.resize(frame, (224, 224))
     inp = transform(resized_frame).unsqueeze(0).to(DEVICE)
-    print("")
+
     with torch.no_grad():
         logits = model(inp)
         probs = torch.softmax(logits, dim=1)[0]  # Get probabilities for each class
-        print(f"All class probabilities: {probs}")  # See if class 4 is always low
         confidence = torch.softmax(logits, dim=1).max().item()
         pred = logits.argmax(dim=1).item()
-        print(f"Predicted class: {pred} with confidence {confidence:.4f}")
 
     # Only display if confidence is above threshold
     if confidence >= CONFIDENCE_THRESHOLD:
-        # Overlay cat
-        cat = cv2.resize(cats[pred], (200, 200))
-        frame[0:200, 0:200] = cat
+        # Resize cat image maintaining aspect ratio
+        cat = cats[pred]
+        cat_height, cat_width = cat.shape[:2]
+        max_height = frame.shape[0]
+        max_width = frame.shape[1] // 3  # Use 1/3 of frame width
         
-        # Display confidence and prediction with cat name
+        # Calculate scaling to maintain aspect ratio
+        scale = min(max_height / cat_height, max_width / cat_width)
+        new_width = int(cat_width * scale)
+        new_height = int(cat_height * scale)
+        cat_resized = cv2.resize(cat, (new_width, new_height))
+        
+        # Place cat on the left side of the face
+        x_offset = 10
+        y_offset = (frame.shape[0] - new_height) // 2  # Center vertically
+        
+        # Blend cat image into frame (to avoid hard overlay)
+        frame[y_offset:y_offset+new_height, x_offset:x_offset+new_width] = cat_resized
+        
+        # Display cat name
         cat_name = CAT_NAMES[pred]
-        cv2.putText(frame, f"Cat: {cat_name} | Conf: {confidence:.2f}", (10, 240),
+        cv2.putText(frame, f"Cat: {cat_name}", (x_offset, y_offset + new_height + 25),
                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
 
     cv2.imshow("face2cat", frame)

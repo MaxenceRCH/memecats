@@ -12,7 +12,6 @@ A real-time cat classification system using ResNet-50 that processes webcam feed
 
 ```
 memecats/
-├── detect_cameras.py      # Scan and preview available cameras
 ├── train.py               # Train the cat classification model
 ├── inference.py           # Run live inference on webcam feed
 ├── requirements.txt       # Python dependencies
@@ -47,35 +46,25 @@ Dependencies include:
 
 ## 🎮 Usage
 
-### 1. Detect Available Cameras
-
-Before running inference, check which cameras are available on your system:
-
-```powershell
-python detect_cameras.py
-```
-
-This will Scan for available cameras (0-9), helping to choose the correct camera for inference.
-
-### 2. Prepare Training Data
+### 1. Prepare Training Data
 
 Organize your training data in the `data/` folder by class:
 
 ```
 data/
-├── cat0/
+├── class0/
 │   ├── image1.jpg
 │   ├── image2.jpg
 │   └── ...
-├── cat1/
+├── class1/
 │   ├── image1.jpg
 │   ├── image2.jpg
 │   └── ...
-└── cat2/
+└── class2/
     └── ...
 ```
 
-### 3. Train the Model
+### 2. Train the Model
 
 ```powershell
 python train.py
@@ -90,11 +79,11 @@ Configuration options in `train.py`:
 
 The trained model will be saved as `face_classifier.pt`
 
-### 4. Prepare Cat Images
+### 3. Prepare Cat Images
 
 Place cat images in the `cats/` folder named as `cat0.png`, `cat1.png`, etc. (matching your NUM_CLASSES). These images will be overlaid on the webcam feed when detected.
 
-### 5. Run Live Inference
+### 4. Run Live Inference
 
 ```powershell
 python inference.py
