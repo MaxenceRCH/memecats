@@ -1,6 +1,6 @@
 # MemeCats - Cat Classification with Live Webcam Feed
 
-A real-time cat classification system using ResNet-50 that processes webcam feeds and overlays cat images based on predictions. Perfect to know which instagram cat you look the most like !
+A real-time cat classification system using ResNet-50 that processes webcam feeds and overlays cat images based on predictions. Perfect to know which instagram cat you look like !
 
 ## Demo
 
